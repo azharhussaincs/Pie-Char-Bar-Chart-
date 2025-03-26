@@ -18,8 +18,11 @@ sns.set_style("white")  # Remove background grid lines
 # Create figure with subplots
 fig, axes = plt.subplots(1, 3, figsize=(22, 6))  
 
-# Define high RGB color palette (strong saturation & brightness)
-colors = [(0.0, 0.3, 1.0), (1.0, 0.0, 0.2), (0.0, 0.8, 0.3), (1.0, 0.6, 0.0), (0.5, 0.0, 0.9)]
+# Define custom color mapping
+status_colors = {"Pending": "blue", "Off Grid": "red", "Closed": "green"}
+
+# Apply colors to status categories
+colors = [status_colors.get(status, "gray") for status in status_counts.index]
 
 # Bar Plot (Status Count)
 bars = sns.barplot(x=status_counts.index, y=status_counts.values, ax=axes[0], palette=colors)
@@ -36,6 +39,10 @@ for bar in bars.patches:
     axes[0].text(bar.get_x() + bar.get_width()/2, height, f'{int(height)}', ha='center', va='bottom', fontsize=12, color='black', fontweight="bold")
     bar.set_edgecolor('black')  
     bar.set_linewidth(1.5)  
+
+# Add legend to the first bar chart
+legend_handles = [plt.Rectangle((0,0),1,1, color=color) for color in status_colors.values()]
+axes[0].legend(legend_handles, status_colors.keys(), title="Status", fontsize=10, title_fontsize=12)
 
 # Pie Chart
 explode_values = [0.05] * len(status_counts)
@@ -54,7 +61,7 @@ vendor_status_counts = df.groupby(["CW Vendor", "Status"]).size().unstack(fill_v
 vendor_status_counts = vendor_status_counts.loc[vendor_status_counts.sum(axis=1).sort_values(ascending=False).index]
 
 # Set high RGB colors for vendor plot
-sns.set_palette(colors)  
+sns.set_palette([status_colors.get(status, "gray") for status in vendor_status_counts.columns])  
 vendor_status_counts.plot(kind='bar', ax=axes[2], edgecolor="black", linewidth=1.5, width=0.8)
 
 # Labels and titles
