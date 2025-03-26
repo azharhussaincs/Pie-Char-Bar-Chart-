@@ -18,6 +18,9 @@ sns.set_style("white")  # Remove background grid lines
 # Create figure with subplots
 fig, axes = plt.subplots(1, 3, figsize=(22, 6))  
 
+# Set the main title for the figure
+fig.suptitle("This is system generated report", fontsize=16, fontweight="bold", color="black")
+
 # Define custom color mapping
 status_colors = {"Pending": "blue", "Off Grid": "red", "Closed": "green"}
 
@@ -41,7 +44,7 @@ for bar in bars.patches:
     bar.set_linewidth(1.5)  
 
 # Add legend to the first bar chart
-legend_handles = [plt.Rectangle((0,0),1,1, color=color) for color in status_colors.values()]
+legend_handles = [plt.Rectangle((0, 0), 1, 1, color=color) for color in status_colors.values()]
 axes[0].legend(legend_handles, status_colors.keys(), title="Status", fontsize=10, title_fontsize=12)
 
 # Pie Chart
@@ -85,7 +88,7 @@ for x in x_positions[:-1]:
     axes[2].axvline(x=x, color='black', linestyle='--', linewidth=1.5)
 
 # Adjust layout for better spacing
-plt.tight_layout()
+plt.tight_layout(rect=[0, 0, 1, 0.96])  # Leave space for title
 
 # Show the final visualization
 plt.show()
